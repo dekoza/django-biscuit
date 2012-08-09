@@ -9,8 +9,8 @@ BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.normpath(os.path.join(BASE_PATH, 'media'))
 
 DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'tastypie.db'
-TEST_DATABASE_NAME = 'tastypie-test.db'
+DATABASE_NAME = 'biscuit.db'
+TEST_DATABASE_NAME = 'biscuit-test.db'
 
 # for forwards compatibility
 DATABASES = {
@@ -25,7 +25,7 @@ DATABASES = {
 INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'tastypie',
+    'biscuit',
 ]
 
 DEBUG = True

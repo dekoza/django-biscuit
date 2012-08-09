@@ -8,24 +8,24 @@ except ImportError:
     from setuptools import setup
 
 setup(
-    name='django-tastypie',
+    name='django-biscuit',
     version='0.9.12-alpha',
     description='A flexible & capable API layer for Django.',
     author='Daniel Lindsley',
     author_email='daniel@toastdriven.com',
-    url='http://github.com/toastdriven/django-tastypie/',
+    url='http://github.com/toastdriven/django-biscuit/',
     long_description=open('README.rst', 'r').read(),
     packages=[
-        'tastypie',
-        'tastypie.utils',
-        'tastypie.management',
-        'tastypie.management.commands',
-        'tastypie.migrations',
-        'tastypie.contrib',
-        'tastypie.contrib.gis',
+        'biscuit',
+        'biscuit.utils',
+        'biscuit.management',
+        'biscuit.management.commands',
+        'biscuit.migrations',
+        'biscuit.contrib',
+        'biscuit.contrib.gis',
     ],
     package_data={
-        'tastypie': ['templates/tastypie/*'],
+        'biscuit': ['templates/biscuit/*'],
     },
     zip_safe=False,
     requires=[

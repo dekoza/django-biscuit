@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.management.base import NoArgsCommand
-from tastypie.models import ApiKey
+from biscuit.models import ApiKey
 
 
 class Command(NoArgsCommand):

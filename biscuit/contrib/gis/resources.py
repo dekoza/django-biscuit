@@ -7,8 +7,8 @@ from django.contrib.gis.db.models import GeometryField
 from django.utils import simplejson
 from django.contrib.gis.geos import GEOSGeometry
 
-from tastypie.fields import ApiField, CharField
-from tastypie import resources
+from biscuit.fields import ApiField, CharField
+from biscuit import resources
 
 
 class GeometryApiField(ApiField):
@@ -36,7 +36,7 @@ class GeometryApiField(ApiField):
             return value
 
         # Get ready-made geojson serialization and then convert it _back_ to
-        # a Python object so that tastypie can serialize it as part of the
+        # a Python object so that biscuit can serialize it as part of the
         # bundle.
         return simplejson.loads(value.geojson)
 

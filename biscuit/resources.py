@@ -10,20 +10,20 @@ from django.db import transaction
 from django.db.models.sql.constants import QUERY_TERMS, LOOKUP_SEP
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.utils.cache import patch_cache_control
-from tastypie.authentication import Authentication
-from tastypie.authorization import ReadOnlyAuthorization
-from tastypie.bundle import Bundle
-from tastypie.cache import NoCache
-from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from tastypie.exceptions import NotFound, BadRequest, InvalidFilterError, HydrationError, InvalidSortError, ImmediateHttpResponse
-from tastypie import fields
-from tastypie import http
-from tastypie.paginator import Paginator
-from tastypie.serializers import Serializer
-from tastypie.throttle import BaseThrottle
-from tastypie.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
-from tastypie.utils.mime import determine_format, build_content_type
-from tastypie.validation import Validation
+from biscuit.authentication import Authentication
+from biscuit.authorization import ReadOnlyAuthorization
+from biscuit.bundle import Bundle
+from biscuit.cache import NoCache
+from biscuit.constants import ALL, ALL_WITH_RELATIONS
+from biscuit.exceptions import NotFound, BadRequest, InvalidFilterError, HydrationError, InvalidSortError, ImmediateHttpResponse
+from biscuit import fields
+from biscuit import http
+from biscuit.paginator import Paginator
+from biscuit.serializers import Serializer
+from biscuit.throttle import BaseThrottle
+from biscuit.utils import is_valid_jsonp_callback_value, dict_strip_unicode_keys, trailing_slash
+from biscuit.utils.mime import determine_format, build_content_type
+from biscuit.validation import Validation
 try:
     set
 except NameError:
@@ -124,7 +124,7 @@ class DeclarativeMetaclass(type):
 
         for field_name, obj in attrs.items():
             # Look for ``dehydrated_type`` instead of doing ``isinstance``,
-            # which can break down if Tastypie is re-namespaced as something
+            # which can break down if Biscuit is re-namespaced as something
             # else.
             if hasattr(obj, 'dehydrated_type'):
                 field = attrs.pop(field_name)
@@ -213,7 +213,7 @@ class Resource(object):
                 # A real, non-expected exception.
                 # Handle the case where the full traceback is more helpful
                 # than the serialized error.
-                if settings.DEBUG and getattr(settings, 'TASTYPIE_FULL_DEBUG', False):
+                if settings.DEBUG and getattr(settings, 'BISCUIT_FULL_DEBUG', False):
                     raise
 
                 # Re-raise the error to get a proper traceback when the error
@@ -255,7 +255,7 @@ class Resource(object):
         send_broken_links = getattr(settings, 'SEND_BROKEN_LINK_EMAILS', False)
 
         if not response_code == 404 or send_broken_links:
-            log = logging.getLogger('django.request.tastypie')
+            log = logging.getLogger('django.request.biscuit')
             log.error('Internal Server Error: %s' % request.path, exc_info=sys.exc_info(), extra={'status_code': response_code, 'request':request})
 
             if django.VERSION < (1, 3, 0):
@@ -271,7 +271,7 @@ class Resource(object):
 
         # Prep the data going out.
         data = {
-            "error_message": getattr(settings, 'TASTYPIE_CANNED_ERROR', "Sorry, this request could not be processed. Please try again later."),
+            "error_message": getattr(settings, 'BISCUIT_CANNED_ERROR', "Sorry, this request could not be processed. Please try again later."),
         }
         desired_format = self.determine_format(request)
         serialized = self.serialize(request, data, desired_format)
@@ -333,7 +333,7 @@ class Resource(object):
         """
         Used to determine the desired format.
 
-        Largely relies on ``tastypie.utils.mime.determine_format`` but here
+        Largely relies on ``biscuit.utils.mime.determine_format`` but here
         as a point of extension.
         """
         return determine_format(request, self._meta.serializer, default_format=self._meta.default_format)

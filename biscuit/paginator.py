@@ -1,5 +1,5 @@
 from django.conf import settings
-from tastypie.exceptions import BadRequest
+from biscuit.exceptions import BadRequest
 from urllib import urlencode
 
 
@@ -8,7 +8,7 @@ class Paginator(object):
     Limits result sets down to sane amounts for passing to the client.
 
     This is used in place of Django's ``Paginator`` due to the way pagination
-    works. ``limit`` & ``offset`` (tastypie) are used in place of ``page``
+    works. ``limit`` & ``offset`` (biscuit) are used in place of ``page``
     (Django) so none of the page-related calculations are necessary.
 
     This implementation also provides additional details like the

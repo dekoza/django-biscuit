@@ -3,7 +3,7 @@ from urlparse import urlparse
 from django.conf import settings
 from django.test import TestCase
 from django.test.client import FakePayload, Client
-from tastypie.serializers import Serializer
+from biscuit.serializers import Serializer
 
 
 class TestApiClient(object):
@@ -35,7 +35,7 @@ class TestApiClient(object):
         send along ``GET`` parameters. This is useful when testing filtering or other
         things that read off the ``GET`` params. Example::
 
-            from tastypie.test import TestApiClient
+            from biscuit.test import TestApiClient
             client = TestApiClient()
 
             response = client.get('/api/v1/entry/1/', data={'format': 'json', 'title__startswith': 'a', 'limit': 20, 'offset': 60})
@@ -67,7 +67,7 @@ class TestApiClient(object):
         ``data`` gets serialized & sent as the body instead of becoming part of the URI.
         Example::
 
-            from tastypie.test import TestApiClient
+            from biscuit.test import TestApiClient
             client = TestApiClient()
 
             response = client.post('/api/v1/entry/', data={
@@ -103,7 +103,7 @@ class TestApiClient(object):
         ``data`` gets serialized & sent as the body instead of becoming part of the URI.
         Example::
 
-            from tastypie.test import TestApiClient
+            from biscuit.test import TestApiClient
             client = TestApiClient()
 
             response = client.put('/api/v1/entry/1/', data={
@@ -139,7 +139,7 @@ class TestApiClient(object):
         ``data`` gets serialized & sent as the body instead of becoming part of the URI.
         Example::
 
-            from tastypie.test import TestApiClient
+            from biscuit.test import TestApiClient
             client = TestApiClient()
 
             response = client.patch('/api/v1/entry/1/', data={
@@ -186,7 +186,7 @@ class TestApiClient(object):
         send along ``DELETE`` parameters. This is useful when testing filtering or other
         things that read off the ``DELETE`` params. Example::
 
-            from tastypie.test import TestApiClient
+            from biscuit.test import TestApiClient
             client = TestApiClient()
 
             response = client.delete('/api/v1/entry/1/', data={'format': 'json'})
@@ -213,7 +213,7 @@ class TestApiClient(object):
 
 class ResourceTestCase(TestCase):
     """
-    A useful base class for the start of testing Tastypie APIs.
+    A useful base class for the start of testing Biscuit APIs.
     """
     def setUp(self):
         super(ResourceTestCase, self).setUp()
@@ -258,7 +258,7 @@ class ResourceTestCase(TestCase):
         Creates & returns the HTTP ``Authorization`` header for use with Digest
         Auth.
         """
-        from tastypie.authentication import hmac, sha1, uuid, python_digest
+        from biscuit.authentication import hmac, sha1, uuid, python_digest
 
         new_uuid = uuid.uuid4()
         opaque = hmac.new(str(new_uuid), digestmod=sha1).hexdigest()
@@ -267,7 +267,7 @@ class ResourceTestCase(TestCase):
             method.upper(),
             uri,
             1, # nonce_count
-            digest_challenge=python_digest.build_digest_challenge(time.time(), getattr(settings, 'SECRET_KEY', ''), 'django-tastypie', opaque, False),
+            digest_challenge=python_digest.build_digest_challenge(time.time(), getattr(settings, 'SECRET_KEY', ''), 'django-biscuit', opaque, False),
             password=api_key
         )
 

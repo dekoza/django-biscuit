@@ -2,10 +2,19 @@
 django-biscuit
 ==============
 
-Creating delicious DRY APIs for Django apps since 2012.
+Letting you slack off while developing tasty APIs for Django apps since 2012.
 
-This project is a fork of `django-tastypie` and its main aim is to
-make Tastypie DRY as hell.
+This project is a fork of `django-tastypie` and the main aim is to
+make Tastypie DRY as hell. It means  that you shouldn't be forced
+to write any classes just to get a basic functionality. Just like you
+don't have to write ModelAdmin classes to get your Admin Panel working.
+
+This will be a drop-in replacement for Tastypie, i.e. it should work out
+of the box for your old Tastypie APIs but provide you with more DRY approach
+if you want to add something more. As a drop-in replacement Biscuit will
+benefit also from all API consumers tailored/optimized for Tastypie like drest.
+
+The whole rationale behind this fork is outlined here: https://github.com/toastdriven/django-tastypie/issues/599
 
 Currently in alpha (v0.0.1) and pretty much identical to Tastypie.
 
@@ -86,7 +95,7 @@ common reasons for biscuit.
   maps well to the problem domain.
 * You want/need XML serialization that is treated equally to JSON (and YAML is
   there too).
-* You do want to read only a short Tutorial to get started.
+* You want to read only a short Tutorial to get started.
 
 
 Reference Material

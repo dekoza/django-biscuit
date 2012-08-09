@@ -27,7 +27,7 @@ def determine_format(request, serializer, default_format='application/json'):
     if request.META.get('HTTP_ACCEPT', '*/*') != '*/*':
         formats = list(serializer.supported_formats) or []
         # Reverse the list, because mimeparse is weird like that. See also
-        # https://github.com/toastdriven/django-tastypie/issues#issue/12 for
+        # https://github.com/toastdriven/django-biscuit/issues#issue/12 for
         # more information.
         formats.reverse()
         best_format = mimeparse.best_match(formats, request.META['HTTP_ACCEPT'])

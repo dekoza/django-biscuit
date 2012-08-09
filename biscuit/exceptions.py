@@ -1,45 +1,45 @@
 from django.http import HttpResponse
 
 
-class TastypieError(Exception):
-    """A base exception for other tastypie-related errors."""
+class BiscuitError(Exception):
+    """A base exception for other biscuit-related errors."""
     pass
 
 
-class HydrationError(TastypieError):
+class HydrationError(BiscuitError):
     """Raised when there is an error hydrating data."""
     pass
 
 
-class NotRegistered(TastypieError):
+class NotRegistered(BiscuitError):
     """
     Raised when the requested resource isn't registered with the ``Api`` class.
     """
     pass
 
 
-class NotFound(TastypieError):
+class NotFound(BiscuitError):
     """
     Raised when the resource/object in question can't be found.
     """
     pass
 
 
-class ApiFieldError(TastypieError):
+class ApiFieldError(BiscuitError):
     """
     Raised when there is a configuration error with a ``ApiField``.
     """
     pass
 
 
-class UnsupportedFormat(TastypieError):
+class UnsupportedFormat(BiscuitError):
     """
     Raised when an unsupported serialization format is requested.
     """
     pass
 
 
-class BadRequest(TastypieError):
+class BadRequest(BiscuitError):
     """
     A generalized exception for indicating incorrect request parameters.
 
@@ -49,7 +49,7 @@ class BadRequest(TastypieError):
     pass
 
 
-class BlueberryFillingFound(TastypieError):
+class BlueberryFillingFound(BiscuitError):
     pass
 
 
@@ -61,7 +61,7 @@ class InvalidFilterError(BadRequest):
     pass
 
 
-class InvalidSortError(TastypieError):
+class InvalidSortError(BiscuitError):
     """
     Raised when the end user attempts to sort on a field that has not be
     explicitly allowed.
@@ -69,7 +69,7 @@ class InvalidSortError(TastypieError):
     pass
 
 
-class ImmediateHttpResponse(TastypieError):
+class ImmediateHttpResponse(BiscuitError):
     """
     This exception is used to interrupt the flow of processing to immediately
     return a custom HttpResponse.

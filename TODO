@@ -1,20 +1,5 @@
 TODO
 ====
 
-Short Term
-----------
-
-Cody:
-- Test support for serialization/deserialization.
-
-Daniel:
-- Authentication
-    - ``OauthAuthentication``
-    - ``DigestAuthentication``
-- More integration tests (intermediate, advanced, composite, non-model)
-
-
-Long Term
----------
-
-- HTML browsing
+- DRY the hell out of Tastypie
+- Keep up with new Tastypie features

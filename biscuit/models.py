@@ -3,7 +3,7 @@ import hmac
 import time
 from django.conf import settings
 from django.db import models
-from tastypie.utils import now
+from biscuit.utils import now
 
 try:
     from hashlib import sha1

@@ -76,7 +76,7 @@ class BasicAuthenticationTestCase(TestCase):
         self.assertEqual(isinstance(auth.is_authenticated(request), HttpUnauthorized), True)
 
         # HttpUnauthorized with auth type and realm
-        self.assertEqual(auth.is_authenticated(request)['WWW-Authenticate'], 'Basic Realm="django-tastypie"')
+        self.assertEqual(auth.is_authenticated(request)['WWW-Authenticate'], 'Basic Realm="django-biscuit"')
 
         # Wrong basic auth details.
         request.META['HTTP_AUTHORIZATION'] = 'abcdefg'
@@ -299,7 +299,7 @@ class DigestAuthenticationTestCase(TestCase):
 
         # HttpUnauthorized with auth type and realm
         self.assertEqual(auth_request['WWW-Authenticate'].find('Digest'), 0)
-        self.assertEqual(auth_request['WWW-Authenticate'].find(' realm="django-tastypie"') > 0, True)
+        self.assertEqual(auth_request['WWW-Authenticate'].find(' realm="django-biscuit"') > 0, True)
         self.assertEqual(auth_request['WWW-Authenticate'].find(' opaque=') > 0, True)
         self.assertEqual(auth_request['WWW-Authenticate'].find('nonce=') > 0, True)
 
@@ -508,7 +508,7 @@ class MultiAuthenticationTestCase(TestCase):
         self.assertEqual(isinstance(auth.is_authenticated(request), HttpUnauthorized), True)
 
         # Basic Auth still returns appropriately.
-        self.assertEqual(auth.is_authenticated(request)['WWW-Authenticate'], 'Basic Realm="django-tastypie"')
+        self.assertEqual(auth.is_authenticated(request)['WWW-Authenticate'], 'Basic Realm="django-biscuit"')
 
         # API Key Auth works.
         request = HttpRequest()
