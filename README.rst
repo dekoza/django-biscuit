@@ -2,7 +2,7 @@
 django-biscuit
 ==============
 
-Letting you slack off while developing tasty APIs for Django apps since 2012.
+Letting you slack off while developing tasty APIs for Django apps.
 
 This project is a fork of `django-tastypie` and the main aim is to
 make Tastypie DRY as hell. It means  that you shouldn't be forced
