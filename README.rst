@@ -1,11 +1,17 @@
-===============
-django-tastypie
-===============
+==============
+django-biscuit
+==============
 
-Creating delicious APIs for Django apps since 2010.
+Creating delicious DRY APIs for Django apps since 2012.
 
-Currently in beta (v0.9.11) but being used actively in production on several
-sites.
+This project is a fork of `django-tastypie` and its main aim is to
+make Tastypie DRY as hell.
+
+Currently in alpha (v0.0.1) and pretty much identical to Tastypie.
+
+.. warning::
+    I'll say it once again: **this project is early alpha**.
+    Do **NOT** use this unless you want to contribute.
 
 
 Requirements
@@ -34,81 +40,59 @@ Optional
 What's It Look Like?
 ====================
 
-A basic example looks like::
+At this stage it's more like  "What It **SHOULD** Look Like?"
+
+A basic example *should* look like this::
 
     # myapp/api.py
     # ============
-    from tastypie.resources import ModelResource
+    from biscuit.api import Api
     from myapp.models import Entry
 
-
-    class EntryResource(ModelResource):
-        class Meta:
-            queryset = Entry.objects.all()
-
+    myapi = Api()
+    myapi.register(Entry)
 
     # urls.py
     # =======
     from django.conf.urls.defaults import *
-    from tastypie.api import Api
-    from myapp.api import EntryResource
+    from biscuit.api import Api
+    from myapp.api import myapi
 
-    v1_api = Api(api_name='v1')
-    v1_api.register(EntryResource())
+    api = Api(name='v1', consume=[myapi])
 
     urlpatterns = patterns('',
         # The normal jazz here then...
-        (r'^api/', include(v1_api.urls)),
+        (r'^api/', include(api.urls)),
     )
 
-That gets you a fully working, read-write API for the ``Entry`` model that
+That should get you a fully working, read-write API for the ``Entry`` model that
 supports all CRUD operations in a RESTful way. JSON/XML/YAML support is already
-there, and it's easy to add related data/authentication/caching.
-
-You can find more in the documentation at
-http://django-tastypie.readthedocs.org/.
+there, and it's easy to add related data/authentication/caching. And all this
+without writing a single class.
 
 
-Why Tastypie?
+Why Biscuit?
 =============
 
 There are other, better known API frameworks out there for Django. You need to
 assess the options available and decide for yourself. That said, here are some
-common reasons for tastypie.
+common reasons for biscuit.
 
 * You need an API that is RESTful and uses HTTP well.
 * You want to support deep relations.
+* You DON'T want to be forced to write any classes to get basic functionality.
 * You DON'T want to have to write your own serializer to make the output right.
-* You want an API framework that has little magic, very flexible and maps well to
-  the problem domain.
+* You want an API framework that is very flexible, doesn't push you around and
+  maps well to the problem domain.
 * You want/need XML serialization that is treated equally to JSON (and YAML is
   there too).
-* You want to support my perceived NIH syndrome, which is less about NIH and more
-  about trying to help out friends/coworkers.
+* You do want to read only a short Tutorial to get started.
 
 
 Reference Material
 ==================
 
-* http://github.com/toastdriven/django-tastypie/tree/master/tests/basic shows
-  basic usage of tastypie
 * http://en.wikipedia.org/wiki/REST
 * http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 * http://www.ietf.org/rfc/rfc2616.txt
 * http://jacobian.org/writing/rest-worst-practices/
-
-
-Commercial Support
-==================
-
-If you're using Tastypie in a commercial environment, paid support is available
-from `Toast Driven`_. Services offered include:
-
-* Advice/help with setup
-* Implementation in your project
-* Bugfixes in Tastypie itself
-* Features in Tastypie itself
-
-If you're interested, please contact Daniel Lindsley (daniel@toastdriven.com).
-
-.. _`Toast Driven`: http://toastdriven.com/
