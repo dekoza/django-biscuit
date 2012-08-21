@@ -1,3 +1,4 @@
+#coding: utf-8
 import warnings
 from django.conf.urls.defaults import *
 from django.core.exceptions import ImproperlyConfigured
@@ -18,14 +19,31 @@ class Api(object):
     Especially useful for navigation, HATEOAS and for providing multiple
     versions of your API.
 
-    Optionally supplying ``api_name`` allows you to name the API. Generally,
+    Optionally supplying ``name`` allows you to name the API. Generally,
     this is done with version numbers (i.e. ``v1``, ``v2``, etc.) but can
     be named any string.
+
+    You can also provide ``consume`` argument that should be a list of `Api`
+    instances to merge with this instance. This allows for more decoupled
+    apps and cleaner imports.
     """
-    def __init__(self, api_name="v1", **kwargs):
-        self.api_name = getattr(kwargs, 'name', api_name)  # 'name' takes precedence and 'api_name' is a fallback
+    def __init__(self, api_name="v1", consume=None, **kwargs):
+        # TODO: support 'consume' parameter that should take list of Api() instances and add them to current API ignoring the 'name' parameter
+
+        self.api_name = kwargs.get('name', api_name)  # 'name' takes precedence and 'api_name' is a fallback
         self._registry = {}
         self._canonicals = {}
+
+        if consume is not None:
+            if isinstance(consume, Api):
+                # it's more convenient not to wrap single object in list, so let's do it now
+                consume = [consume]
+
+            for snack in consume:
+                # should I update api_name for each snack?
+                self._registry.update(snack._registry)      # a bit risky, overwrites previous values but it's developer's business
+                self._canonicals.update(snack._canonicals)
+
 
     def register(self, resource_or_iterable, canonical=True):
         """
@@ -36,7 +54,6 @@ class Api(object):
         resources being registered are the canonical variant. Defaults to
         ``True``.
         """
-
         if isinstance(resource_or_iterable, DeclarativeMetaclass) or isinstance(resource_or_iterable, Resource):
             resource_or_iterable = [resource_or_iterable]
 
@@ -58,8 +75,8 @@ class Api(object):
                 self._canonicals[resource_name] = resource
                 # TODO: This is messy, but makes URI resolution on FK/M2M fields
                 #       work consistently.
-                resource._meta.api_name = self.api_name
-                resource.__class__.Meta.api_name = self.api_name
+                resource._meta.api_name = self.api_name           #?
+                resource.__class__.Meta.api_name = self.api_name  #?!
 
     def unregister(self, resource_name):
         """

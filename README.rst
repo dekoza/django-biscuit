@@ -9,7 +9,7 @@ make Tastypie DRY as hell. It means  that you shouldn't be forced
 to write any classes just to get a basic functionality. Just like you
 don't have to write ModelAdmin classes to get your Admin Panel working.
 
-This will be a drop-in replacement for Tastypie, i.e. it should work out
+This will be a drop-in replacement for Tastypie - it should work out
 of the box for your old Tastypie APIs but provide you with more DRY approach
 if you want to add something more. As a drop-in replacement Biscuit will
 benefit also from all API consumers tailored/optimized for Tastypie like drest.
@@ -35,7 +35,7 @@ Required
 
   * Older versions will work, but their behavior on JSON/JSONP is a touch wonky.
 
-* dateutil (http://labix.org/python-dateutil) >= 1.5, < 2.0
+* dateutil (https://launchpad.net/dateutil) >= 2.1
 
 Optional
 --------
@@ -49,9 +49,9 @@ Optional
 What's It Look Like?
 ====================
 
-At this stage it's more like  "What It **SHOULD** Look Like?"
+As this version is pre-alpha, the following examples does not work yet.
 
-A basic example *should* look like this::
+The most basic example **should** looks like this::
 
     # myapp/api.py
     # ============
