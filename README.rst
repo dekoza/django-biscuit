@@ -4,10 +4,10 @@ django-biscuit
 
 Letting you slack off while developing tasty APIs for Django apps.
 
-This project is a fork of `django-tastypie` and the main aim is to
-refactor Tastypie in such a way, that writing APIs will be DRY as hell.
+This project is a fork of `django-tastypie <https://github.com/toastdriven/django-tastypie>`_ and the main aim is to
+refactor it in such a way, that the DRY principle will be respected.
 I mean - seriously - you shouldn't have to be forced to write any classes
-just to get a simple basic API functionality like listing your models.
+just to get a simple basic API functionality like listing your Models.
 Just like you don't have to write ModelAdmin classes to get your Admin
 Panel working.
 
@@ -16,7 +16,8 @@ of the box for your old Tastypie APIs. But if you want to add something more,
 you can follow more DRY approach. Being a drop-in replacement allows Biscuit to
 benefit from all API consumers tailored/optimized for Tastypie, like `drest <http://drest.rtfd.org/>`_.
 
-The whole rationale behind this fork is outlined here: https://github.com/toastdriven/django-tastypie/issues/599
+The whole rationale behind this fork is outlined in Tastypie's issue
+`#599 <https://github.com/toastdriven/django-tastypie/issues/599>`_.
 
 Currently in beta (v0.0.1) - seems to work but needs heavy testing.
 
@@ -69,14 +70,11 @@ The most basic example looks like this::
     # urls.py
     # =======
     from django.conf.urls.defaults import *
-    from biscuit.api import Api
     from myapp.api import myapi
-
-    api = Api(name='v1', consume=[myapi])
 
     urlpatterns = patterns('',
         # The normal jazz here then...
-        (r'^api/', include(api.urls)),
+        (r'^api/', include(myapi.urls)),
     )
 
 That should get you a fully working, read-write API for the ``Entry`` model that
@@ -107,13 +105,13 @@ Differences with Tastypie
 -------------------------
 
 * You can register ``Model`` subclasses and appropriate ModelResource with sane defaults
-  (meaning `resource_name = <Model>.__name__` and `queryset = <Model>.objects.all()`) is
+  (meaning ``resource_name = <Model>.__name__`` and ``queryset = <Model>.objects.all()``) is
   tailored behind the scenes.
-* You can register ``Resource`` subclasses (compare new `v1.register(MyResource)` with old `v1.register(MyResource())`)
-* You can put all those in a list and write a single register: `v1.register([MyFirstResource, MyOtherResource]).
+* You can register ``Resource`` subclasses (compare new ``v1.register(MyResource)`` with old ``v1.register(MyResource())``)
+* You can put all those in a list and write a single register: ``v1.register([MyFirstResource, MyOtherResource]``).
   This list is not restricted and can contain both ``Resource`` and ``Model`` subclasses.
 * You can of course register ``Resource`` subclass' instances, just like you did in Tastypie (that's what "drop-in replacement" really means)
-* You can clean up your imports because Api() instances are consumable. Compare::
+* You can clean up your imports because ``Api`` instances are consumable. Compare::
 
     # urls.py - Tastypie
     from tastypie.api import Api
