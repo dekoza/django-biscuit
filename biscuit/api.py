@@ -67,7 +67,7 @@ class Api(object):
             # if Model subclass, make default Resource
             # it's so hackish that it might work ;)
             if isinstance(obj, ModelBase):
-                dummy_meta = type("Meta", (object,), {'model': obj, 'resource': obj._meta.module_name, 'queryset': obj.objects.all()})
+                dummy_meta = type("Meta", (object,), {'model': obj, 'resource_name': obj._meta.module_name, 'queryset': obj.objects.all()})
                 dummy_resource = type("%sResource" % obj.__name__, (ModelResource,), {'Meta': dummy_meta,})
                 obj = dummy_resource()
 
