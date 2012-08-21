@@ -30,10 +30,7 @@ except NameError:
     from sets import Set as set
 # The ``copy`` module became function-friendly in Python 2.5 and
 # ``copycompat`` was added in post 1.1.1 Django (r11901)..
-try:
-    from django.utils.copycompat import deepcopy
-except ImportError:
-    from copy import deepcopy
+from copy import deepcopy
 # If ``csrf_exempt`` isn't present, stub it.
 try:
     from django.views.decorators.csrf import csrf_exempt
@@ -2150,3 +2147,8 @@ def convert_post_to_put(request):
 
 def convert_post_to_patch(request):
     return convert_post_to_VERB(request, verb='PATCH')
+
+
+
+class ModelAutoResource(ModelResource):
+    pass
