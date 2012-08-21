@@ -61,6 +61,8 @@ class Api(object):
             if not isinstance(resource, Resource):
                 resource = resource()
 
+            # if Model subclass, make default Resource
+
             resource_name = getattr(resource._meta, 'resource_name', None)
 
             if resource_name is None:
