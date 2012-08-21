@@ -4,8 +4,9 @@ from django.conf.urls.defaults import *
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
+from django.db.models.base import ModelBase
 from biscuit.exceptions import NotRegistered, BadRequest
-from biscuit.resources import Resource, DeclarativeMetaclass
+from biscuit.resources import Resource, ModelResource, DeclarativeMetaclass
 from biscuit.serializers import Serializer
 from biscuit.utils import trailing_slash, is_valid_jsonp_callback_value
 from biscuit.utils.mime import determine_format, build_content_type
@@ -45,7 +46,7 @@ class Api(object):
                 self._canonicals.update(snack._canonicals)
 
 
-    def register(self, resource_or_iterable, canonical=True):
+    def register(self, res_mod_iter, canonical=True):
         """
         Registers a ``Resource`` subclass with the API. Allows registering
         list of ``Resource``s for convenience.
@@ -54,31 +55,44 @@ class Api(object):
         resources being registered are the canonical variant. Defaults to
         ``True``.
         """
-        if isinstance(resource_or_iterable, DeclarativeMetaclass) or isinstance(resource_or_iterable, Resource):
-            resource_or_iterable = [resource_or_iterable]
+        # DeclarativeMetaclas -> Resource subclass; let's instantiate it
+        # Resource -> Resource subclass *instance*; nothin' to do
+        # ModelBase -> Model subclass; let's make a ModelResource based on it
+        if isinstance(res_mod_iter, DeclarativeMetaclass) or \
+           isinstance(res_mod_iter, Resource) or \
+           isinstance(res_mod_iter, ModelBase):
+            res_mod_iter = [res_mod_iter]
 
-        for resource in resource_or_iterable:
-            if not isinstance(resource, Resource):
-                resource = resource()
-
+        for obj in res_mod_iter:
             # if Model subclass, make default Resource
+            # it's so hackish that it might work ;)
+            if isinstance(obj, ModelBase):
+                dummy_meta = type("Meta", (object,), {'model': obj, 'resource': obj._meta.module_name, 'queryset': obj.objects.all()})
+                dummy_resource = type("%sResource" % obj.__name__, (ModelResource,), {'Meta': dummy_meta,})
+                obj = dummy_resource()
 
-            resource_name = getattr(resource._meta, 'resource_name', None)
+            elif not isinstance(obj, Resource):
+                obj = obj()
+
+
+
+
+            resource_name = getattr(obj._meta, 'resource_name', None)
 
             if resource_name is None:
-                raise ImproperlyConfigured("Resource %r must define a 'resource_name'." % resource)
+                raise ImproperlyConfigured("Resource %r must define a 'resource_name'." % obj)
 
-            self._registry[resource_name] = resource
+            self._registry[resource_name] = obj
 
             if canonical is True:
                 if resource_name in self._canonicals:
-                    warnings.warn("A new resource '%r' is replacing the existing canonical URL for '%s'." % (resource, resource_name), Warning, stacklevel=2)
+                    warnings.warn("A new resource '%r' is replacing the existing canonical URL for '%s'." % (obj, resource_name), Warning, stacklevel=2)
 
-                self._canonicals[resource_name] = resource
+                self._canonicals[resource_name] = obj
                 # TODO: This is messy, but makes URI resolution on FK/M2M fields
                 #       work consistently.
-                resource._meta.api_name = self.api_name           #?
-                resource.__class__.Meta.api_name = self.api_name  #?!
+                obj._meta.api_name = self.api_name           #?
+                obj.__class__.Meta.api_name = self.api_name  #?!
 
     def unregister(self, resource_name):
         """
