@@ -22,8 +22,8 @@ class Api(object):
     this is done with version numbers (i.e. ``v1``, ``v2``, etc.) but can
     be named any string.
     """
-    def __init__(self, api_name="v1"):
-        self.api_name = api_name
+    def __init__(self, api_name="v1", **kwargs):
+        self.api_name = getattr(kwargs, 'name', api_name)  # 'name' takes precedence and 'api_name' is a fallback
         self._registry = {}
         self._canonicals = {}
 
@@ -173,8 +173,8 @@ class NamespacedApi(Api):
     """
     An API subclass that respects Django namespaces.
     """
-    def __init__(self, api_name="v1", urlconf_namespace=None):
-        super(NamespacedApi, self).__init__(api_name=api_name)
+    def __init__(self, name="v1", urlconf_namespace=None):
+        super(NamespacedApi, self).__init__(name=name)
         self.urlconf_namespace = urlconf_namespace
 
     def register(self, resource, canonical=True):
