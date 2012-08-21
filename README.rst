@@ -49,9 +49,7 @@ Optional
 What's It Look Like?
 ====================
 
-As this version is pre-alpha, the following example does not work yet.
-
-The most basic example **should** looks like this::
+The most basic example looks like this::
 
     # myapp/api.py
     # ============
