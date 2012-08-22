@@ -28,19 +28,19 @@ class Api(object):
     instances to merge with this instance. This allows for more decoupled
     apps and cleaner imports.
     """
-    def __init__(self, api_name="v1", consume=None, **kwargs):
-        # TODO: support 'consume' parameter that should take list of Api() instances and add them to current API ignoring the 'name' parameter
+    def __init__(self, name=None, include=None, **kwargs):
 
-        self.api_name = kwargs.get('name', api_name)  # 'name' takes precedence and 'api_name' is a fallback
+        legacy_api_name = kwargs.get('api_name', None)
+        self.api_name = name if name else legacy_api_name or 'v1'  # 'name' takes precedence and 'api_name' is a fallback
         self._registry = {}
         self._canonicals = {}
 
-        if consume is not None:
-            if isinstance(consume, Api):
+        if include is not None:
+            if isinstance(include, Api):
                 # it's more convenient not to wrap single object in list, so let's do it now
-                consume = [consume]
+                include = [include]
 
-            for snack in consume:
+            for snack in include:
                 # should I update api_name for each snack?
                 self._registry.update(snack._registry)      # a bit risky, overwrites previous values but it's developer's business
                 self._canonicals.update(snack._canonicals)

@@ -120,7 +120,7 @@ Differences with Tastypie
 * You can put all those in a list and write a single register: ``v1.register([MyFirstResource, MyOtherResource]``).
   This list is not restricted and can contain both ``Resource`` and ``Model`` subclasses.
 * You can of course register ``Resource`` subclass' instances, just like you did in Tastypie (that's what "drop-in replacement" really means)
-* No more cluttering urls.py - create ``Api`` instances in your app and then just import and "consume" it in urls.py. Compare::
+* No more cluttering urls.py - create ``Api`` instances in your app and then just import and include it in urls.py. Compare::
 
     # urls.py - Tastypie
     from tastypie.api import Api
@@ -146,7 +146,7 @@ Differences with Tastypie
     from myapp.api import myapi
     from otherapp.api import otherapi
 
-    v1 = Api(name='v1', consume=[myapi, otherapi])
+    v1 = Api(name='v1', include=[myapi, otherapi])
 
     urlpatterns = patterns('',
         # (...)
