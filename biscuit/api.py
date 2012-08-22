@@ -24,7 +24,7 @@ class Api(object):
     this is done with version numbers (i.e. ``v1``, ``v2``, etc.) but can
     be named any string.
 
-    You can also provide ``consume`` argument that should be a list of `Api`
+    You can also provide ``include`` argument that should be a list of `Api`
     instances to merge with this instance. This allows for more decoupled
     apps and cleaner imports.
     """
