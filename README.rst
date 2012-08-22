@@ -11,11 +11,6 @@ just to get a simple basic API functionality like listing your Models.
 Just like you don't have to write ModelAdmin classes to get your Admin
 Panel working.
 
-This should be a painless drop-in replacement for Tastypie - it should work out
-of the box for your old Tastypie APIs. But if you want to add something more,
-you can follow more DRY approach. Being a drop-in replacement allows Biscuit to
-benefit from all API consumers tailored/optimized for Tastypie, like `drest <http://drest.rtfd.org/>`_.
-
 The whole rationale behind this fork is outlined in Tastypie's issue
 `#599 <https://github.com/toastdriven/django-tastypie/issues/599>`_.
 
@@ -99,6 +94,19 @@ common reasons for biscuit.
 * You want/need XML serialization that is treated equally to JSON (and YAML is
   there too).
 * You want to read only a short Tutorial to get started.
+* Biscuit benefits from all API consumers tailored/optimized for Tastypie,
+  like `drest <http://drest.rtfd.org/>`_.
+
+
+Tastypie drop-in replacement
+----------------------------
+
+As the module has a different name, Biscuit itself is not a painless
+drop-in replacement for Tastypie as you'd need to refactor your code
+to get everything normally. But if you do want to benefit from *some*
+of Biscuit's goodness, you can checkout ``tastypie`` branch. I try
+to keep it up to date with current Tastypie development plus it
+includes all the patches that do not break compatibility.
 
 
 Differences with Tastypie
@@ -111,7 +119,7 @@ Differences with Tastypie
 * You can put all those in a list and write a single register: ``v1.register([MyFirstResource, MyOtherResource]``).
   This list is not restricted and can contain both ``Resource`` and ``Model`` subclasses.
 * You can of course register ``Resource`` subclass' instances, just like you did in Tastypie (that's what "drop-in replacement" really means)
-* You can clean up your imports because ``Api`` instances are consumable. Compare::
+* No more cluttering urls.py - create ``Api`` instances in your app and then just import and "consume" it in urls.py. Compare::
 
     # urls.py - Tastypie
     from tastypie.api import Api
