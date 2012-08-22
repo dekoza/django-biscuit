@@ -14,7 +14,7 @@ Panel working.
 The whole rationale behind this fork is outlined in Tastypie's issue
 `#599 <https://github.com/toastdriven/django-tastypie/issues/599>`_.
 
-Currently in beta (v0.0.1) - seems to work but needs heavy testing.
+Current version (v0.2.0) is considered **beta** - seems to work but needs heavy testing.
 
 .. warning::
     This project is **NOT YET** properly tested. Use at your own risk.
@@ -25,6 +25,24 @@ Any help and suggestions will be appreciated.
     All the rest of the documentation - for now - is a mirror of Tastypie's
     docs and as such is not 100% relevant to Biscuit. Expect corrections
     anytime soon. I'll accept any help to straighten this up.
+
+Versioning
+----------
+
+Starting from 0.2.0 I'll try to follow Semantic Version guidelines.
+
+Releases will be numbered with the following format:
+
+  ``<major>.<minor>.<patch>``
+
+And constructed with the following guidelines:
+
+* Breaking backward compatibility bumps the major (and resets the minor and patch)
+* New additions without breaking backward compatibility bumps the minor (and resets the patch)
+* Bug fixes and misc changes bumps the patch
+* Major version ``0`` means early development stage
+
+For more information on SemVer, please visit http://semver.org/.
 
 Requirements
 ============
