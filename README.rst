@@ -174,6 +174,22 @@ And constructed with the following guidelines:
 
 For more information on SemVer, please visit http://semver.org/.
 
+
+Planned features
+================
+
+* Decouple ``ModelResource`` from specific ``Model`` by extending logic of ``Api.register()``
+  if first argument is a ``Model`` subclass, second should be a ``ModelResource`` that will
+  wrap itself around the ``Model``. Optional argument ``name`` can be supplied to change
+  the default resource name.
+* Extend the logic of ``Api.register()`` so that it would accept an additional
+  ``Validator`` or ``Form`` subclass that will be used to validate pushed data. In ``Form``
+  case ``register()`` should construct a sane default ``Validator`` around it.
+  This combined with previous feature allows for nice and clean registering of resources
+  similar to ``django.contrib.admin`` approach.
+* Handle relationships by default - *somehow*
+
+
 Reference Material
 ==================
 

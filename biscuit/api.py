@@ -55,7 +55,7 @@ class Api(object):
         ``True``.
         """
         # DeclarativeMetaclas -> Resource subclass; let's instantiate it
-        # Resource -> Resource subclass *instance*; nothin' to do
+        # Resource -> Resource subclass *instance*; issue DeprecationWarning
         # ModelBase -> Model subclass; let's make a ModelResource based on it
         if isinstance(res_mod_iter, DeclarativeMetaclass) or \
            isinstance(res_mod_iter, Resource) or \
