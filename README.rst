@@ -114,7 +114,7 @@ Differences with Tastypie
 -------------------------
 
 * You can register ``Model`` subclasses and appropriate ModelResource with sane defaults
-  (meaning ``resource_name = <Model>.__name__`` and ``queryset = <Model>.objects.all()``) is
+  (meaning ``resource_name = <Model>._meta.module_name`` and ``queryset = <Model>.objects.all()``) is
   tailored behind the scenes.
 * You can register ``Resource`` subclasses (compare new ``v1.register(MyResource)`` with old ``v1.register(MyResource())``)
 * You can put all those in a list and write a single register: ``v1.register([MyFirstResource, MyOtherResource]``).

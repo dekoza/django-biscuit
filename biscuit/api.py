@@ -11,7 +11,6 @@ from biscuit.serializers import Serializer
 from biscuit.utils import trailing_slash, is_valid_jsonp_callback_value
 from biscuit.utils.mime import determine_format, build_content_type
 
-
 class Api(object):
     """
     Implements a registry to tie together the various resources that make up
@@ -63,6 +62,7 @@ class Api(object):
            isinstance(res_mod_iter, ModelBase):
             res_mod_iter = [res_mod_iter]
 
+
         for obj in res_mod_iter:
             # if Model subclass, make a ModelResource with sane defaults
             # it's so hackish that it might actually work ;)
@@ -70,12 +70,13 @@ class Api(object):
                 dummy_meta = type("Meta", (object,), {'resource_name': obj._meta.module_name, 'queryset': obj.objects.all()})
                 dummy_resource = type("%sResource" % obj.__name__, (ModelResource,), {'Meta': dummy_meta,})
                 obj = dummy_resource()
-
             elif not isinstance(obj, Resource):
                 obj = obj()
-
-
-
+            else:
+                warnings.warn(
+                    "Passing of instances is deprecated and marked for removal in 1.0.0",
+                    DeprecationWarning
+                )
 
             resource_name = getattr(obj._meta, 'resource_name', None)
 
