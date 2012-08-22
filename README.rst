@@ -26,23 +26,6 @@ Any help and suggestions will be appreciated.
     docs and as such is not 100% relevant to Biscuit. Expect corrections
     anytime soon. I'll accept any help to straighten this up.
 
-Versioning
-----------
-
-Starting from 0.2.0 I'll try to follow Semantic Version guidelines.
-
-Releases will be numbered with the following format:
-
-  ``<major>.<minor>.<patch>``
-
-And constructed with the following guidelines:
-
-* Breaking backward compatibility bumps the major (and resets the minor and patch)
-* New additions without breaking backward compatibility bumps the minor (and resets the patch)
-* Bug fixes and misc changes bumps the patch
-* Major version ``0`` means early development stage
-
-For more information on SemVer, please visit http://semver.org/.
 
 Requirements
 ============
@@ -171,6 +154,25 @@ Differences with Tastypie
     )
 
   DRY and clean, isn't it? :)
+
+
+Versioning
+----------
+
+Starting from 0.2.0 I'll try to follow Semantic Version guidelines.
+
+Releases will be numbered with the following format:
+
+  ``<major>.<minor>.<patch>``
+
+And constructed with the following guidelines:
+
+* Breaking backward compatibility bumps the major (and resets the minor and patch)
+* New additions without breaking backward compatibility bumps the minor (and resets the patch)
+* Bug fixes and misc changes bumps the patch
+* Major version ``0`` means early development stage
+
+For more information on SemVer, please visit http://semver.org/.
 
 Reference Material
 ==================
