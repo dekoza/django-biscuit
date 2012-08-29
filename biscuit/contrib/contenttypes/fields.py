@@ -3,7 +3,7 @@ from biscuit.resources import Resource
 from biscuit.exceptions import ApiFieldError
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
-from .resources import GenericResource
+from .biscuit.contrib.contenttypes.resources import GenericResource
 
 
 class GenericForeignKeyField(fields.ToOneField):
