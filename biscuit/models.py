@@ -4,12 +4,7 @@ import time
 from django.conf import settings
 from django.db import models
 from biscuit.utils import now
-
-try:
-    from hashlib import sha1
-except ImportError:
-    import sha
-    sha1 = sha.sha
+from hashlib import sha1
 
 
 class ApiAccess(models.Model):
@@ -33,9 +28,10 @@ if 'django.contrib.auth' in settings.INSTALLED_APPS:
     from django.contrib.auth.models import User
     
     class ApiKey(models.Model):
-        user = models.OneToOneField(User, related_name='api_key')
+        user = models.ForeignKey(User, related_name='api_keys')
         key = models.CharField(max_length=256, blank=True, default='')
         created = models.DateTimeField(default=now)
+#        description = models.CharField(max_length=256, blank=True, default='')
 
         def __unicode__(self):
             return u"%s for %s" % (self.key, self.user)

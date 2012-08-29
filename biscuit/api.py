@@ -26,13 +26,18 @@ class Api(object):
     You can also provide ``include`` argument that should be a list of `Api`
     instances to merge with this instance. This allows for more decoupled
     apps and cleaner imports.
+
+    You can also provide ``defaults`` argument that should be a dictionary
+    containing options used to construct Resources for Models.
     """
-    def __init__(self, name=None, include=None, **kwargs):
+    def __init__(self, name=None, include=None,  model_defaults={}, forced_model_defaults={}, **kwargs):
 
         legacy_api_name = kwargs.get('api_name', None)
         self.api_name = name if name else legacy_api_name or 'v1'  # 'name' takes precedence and 'api_name' is a fallback
         self._registry = {}
         self._canonicals = {}
+        self._model_defaults = model_defaults
+        self._forced_defaults = forced_model_defaults
 
         if include is not None:
             if isinstance(include, Api):
@@ -45,7 +50,7 @@ class Api(object):
                 self._canonicals.update(snack._canonicals)
 
 
-    def register(self, res_mod_iter, canonical=True):
+    def register(self, res_mod_iter, defaults={}, canonical=True):
         """
         Registers a ``Resource`` subclass with the API. Allows registering
         list of ``Resource``s for convenience.
@@ -53,10 +58,16 @@ class Api(object):
         Optionally accept a ``canonical`` argument, which indicates that the
         resources being registered are the canonical variant. Defaults to
         ``True``.
+
+        You can also provide ``defaults`` argument that should be a dictionary
+        containing options used to construct Resources for Models.
+        This overrides ``defaults`` set when instantiating ``Api`` but not over
+        ``forced_defaults``.
         """
         # DeclarativeMetaclas -> Resource subclass; let's instantiate it
         # Resource -> Resource subclass *instance*; issue DeprecationWarning
         # ModelBase -> Model subclass; let's make a ModelResource based on it
+
         if isinstance(res_mod_iter, DeclarativeMetaclass) or \
            isinstance(res_mod_iter, Resource) or \
            isinstance(res_mod_iter, ModelBase):
@@ -67,7 +78,13 @@ class Api(object):
             # if Model subclass, make a ModelResource with sane defaults
             # it's so hackish that it might actually work ;)
             if isinstance(obj, ModelBase):
-                dummy_meta = type("Meta", (object,), {'resource_name': obj._meta.module_name, 'queryset': obj.objects.all()})
+                _defaults = {'resource_name': obj._meta.module_name,
+                             'queryset': obj.objects.all(),
+                             }
+                _defaults.update(self._model_defaults)  # easy way to change default option for models
+                _defaults.update(defaults)
+                _defaults.update(self._forced_defaults)
+                dummy_meta = type("Meta", (object,), _defaults)
                 dummy_resource = type("%sResource" % obj.__name__, (ModelResource,), {'Meta': dummy_meta,})
                 obj = dummy_resource()
             elif not isinstance(obj, Resource):
