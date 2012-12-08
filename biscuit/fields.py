@@ -386,7 +386,8 @@ class RelatedField(ApiField):
     self_referential = False
     help_text = 'A related resource. Can be either a URI or set of nested resource data.'
 
-    def __init__(self, to, attribute, related_name=None, default=NOT_PROVIDED, null=False, blank=False, readonly=False, full=False, unique=False, help_text=None):
+    def __init__(self, to, attribute, related_name=None, default=NOT_PROVIDED, null=False, blank=False, readonly=False,
+                 full=False, unique=False, help_text=None, id_only=False):
         """
         Builds the field and prepares it to access to related data.
 
@@ -436,6 +437,7 @@ class RelatedField(ApiField):
         self.resource_name = None
         self.unique = unique
         self._to_class = None
+        self.id_only = id_only
 
         if self.to == 'self':
             self.self_referential = True
@@ -504,8 +506,11 @@ class RelatedField(ApiField):
         from ``full_dehydrate`` for the related resource.
         """
         if not self.full:
-            # Be a good netizen.
-            return related_resource.get_resource_uri(bundle)
+            if self.id_only:
+                return related_resource.get_resource_id(bundle)
+            else:
+                # Be a good netizen.
+                return related_resource.get_resource_uri(bundle)
         else:
             # ZOMG extra data and big payloads.
             bundle = related_resource.build_bundle(obj=related_resource.instance, request=bundle.request)
@@ -609,11 +614,11 @@ class ToOneField(RelatedField):
     help_text = 'A single related resource. Can be either a URI or set of nested resource data.'
 
     def __init__(self, to, attribute, related_name=None, default=NOT_PROVIDED,
-                 null=False, blank=False, readonly=False, full=False,
+                 null=False, blank=False, readonly=False, full=False, id_only=False,
                  unique=False, help_text=None):
         super(ToOneField, self).__init__(
             to, attribute, related_name=related_name, default=default,
-            null=null, blank=blank, readonly=readonly, full=full,
+            null=null, blank=blank, readonly=readonly, full=full, id_only=id_only,
             unique=unique, help_text=help_text
         )
         self.fk_resource = None

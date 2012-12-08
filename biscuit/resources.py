@@ -655,6 +655,21 @@ class Resource(object):
 
         return kwargs
 
+    def get_resource_id(self, bundle_or_obj=None):
+        """
+        HACKISH!
+        """
+        if bundle_or_obj is not None:
+            try:
+                return str(bundle_or_obj.obj.id)
+            except:
+                try:
+                    return str(bundle_or_obj.id)
+                except:
+                    return 'a'
+        else:
+            return 'b'
+
     def get_resource_uri(self, bundle_or_obj=None, url_name='api_dispatch_list'):
         """
         Handles generating a resource URI.
