@@ -7,6 +7,7 @@ from django.utils import datetime_safe, importlib
 from biscuit.bundle import Bundle
 from biscuit.exceptions import ApiFieldError, NotFound
 from biscuit.utils import dict_strip_unicode_keys, make_aware
+from django.utils.encoding import smart_unicode
 
 
 class NOT_PROVIDED:
@@ -179,7 +180,7 @@ class CharField(ApiField):
         if value is None:
             return None
 
-        return unicode(value)
+        return smart_unicode(value)
 
 
 class FileField(ApiField):

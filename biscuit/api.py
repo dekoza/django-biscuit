@@ -11,7 +11,6 @@ from biscuit.serializers import Serializer
 from biscuit.utils import trailing_slash, is_valid_jsonp_callback_value
 from biscuit.utils.mime import determine_format, build_content_type
 
-
 class Api(object):
     """
     Implements a registry to tie together the various resources that make up
@@ -24,29 +23,34 @@ class Api(object):
     this is done with version numbers (i.e. ``v1``, ``v2``, etc.) but can
     be named any string.
 
-    You can also provide ``consume`` argument that should be a list of `Api`
+    You can also provide ``include`` argument that should be a list of `Api`
     instances to merge with this instance. This allows for more decoupled
     apps and cleaner imports.
-    """
-    def __init__(self, api_name="v1", consume=None, **kwargs):
-        # TODO: support 'consume' parameter that should take list of Api() instances and add them to current API ignoring the 'name' parameter
 
-        self.api_name = kwargs.get('name', api_name)  # 'name' takes precedence and 'api_name' is a fallback
+    You can also provide ``defaults`` argument that should be a dictionary
+    containing options used to construct Resources for Models.
+    """
+    def __init__(self, name=None, include=None,  model_defaults={}, forced_model_defaults={}, **kwargs):
+
+        legacy_api_name = kwargs.get('api_name', None)
+        self.api_name = name if name else legacy_api_name or 'v1'  # 'name' takes precedence and 'api_name' is a fallback
         self._registry = {}
         self._canonicals = {}
+        self._model_defaults = model_defaults
+        self._forced_defaults = forced_model_defaults
 
-        if consume is not None:
-            if isinstance(consume, Api):
+        if include is not None:
+            if isinstance(include, Api):
                 # it's more convenient not to wrap single object in list, so let's do it now
-                consume = [consume]
+                include = [include]
 
-            for snack in consume:
+            for snack in include:
                 # should I update api_name for each snack?
                 self._registry.update(snack._registry)      # a bit risky, overwrites previous values but it's developer's business
                 self._canonicals.update(snack._canonicals)
 
 
-    def register(self, res_mod_iter, canonical=True):
+    def register(self, res_mod_iter, defaults={}, canonical=True):
         """
         Registers a ``Resource`` subclass with the API. Allows registering
         list of ``Resource``s for convenience.
@@ -54,28 +58,42 @@ class Api(object):
         Optionally accept a ``canonical`` argument, which indicates that the
         resources being registered are the canonical variant. Defaults to
         ``True``.
+
+        You can also provide ``defaults`` argument that should be a dictionary
+        containing options used to construct Resources for Models.
+        This overrides ``defaults`` set when instantiating ``Api`` but not over
+        ``forced_defaults``.
         """
         # DeclarativeMetaclas -> Resource subclass; let's instantiate it
-        # Resource -> Resource subclass *instance*; nothin' to do
+        # Resource -> Resource subclass *instance*; issue DeprecationWarning
         # ModelBase -> Model subclass; let's make a ModelResource based on it
+
         if isinstance(res_mod_iter, DeclarativeMetaclass) or \
            isinstance(res_mod_iter, Resource) or \
            isinstance(res_mod_iter, ModelBase):
             res_mod_iter = [res_mod_iter]
 
+
         for obj in res_mod_iter:
             # if Model subclass, make a ModelResource with sane defaults
             # it's so hackish that it might actually work ;)
             if isinstance(obj, ModelBase):
-                dummy_meta = type("Meta", (object,), {'resource_name': obj._meta.module_name, 'queryset': obj.objects.all()})
+                _defaults = {'resource_name': obj._meta.module_name,
+                             'queryset': obj.objects.all(),
+                             }
+                _defaults.update(self._model_defaults)  # easy way to change default option for models
+                _defaults.update(defaults)
+                _defaults.update(self._forced_defaults)
+                dummy_meta = type("Meta", (object,), _defaults)
                 dummy_resource = type("%sResource" % obj.__name__, (ModelResource,), {'Meta': dummy_meta,})
                 obj = dummy_resource()
-
             elif not isinstance(obj, Resource):
                 obj = obj()
-
-
-
+            else:
+                warnings.warn(
+                    "Passing of instances is deprecated and marked for removal in 1.0.0",
+                    DeprecationWarning
+                )
 
             resource_name = getattr(obj._meta, 'resource_name', None)
 

@@ -11,15 +11,10 @@ just to get a simple basic API functionality like listing your Models.
 Just like you don't have to write ModelAdmin classes to get your Admin
 Panel working.
 
-This should be a painless drop-in replacement for Tastypie - it should work out
-of the box for your old Tastypie APIs. But if you want to add something more,
-you can follow more DRY approach. Being a drop-in replacement allows Biscuit to
-benefit from all API consumers tailored/optimized for Tastypie, like `drest <http://drest.rtfd.org/>`_.
-
 The whole rationale behind this fork is outlined in Tastypie's issue
 `#599 <https://github.com/toastdriven/django-tastypie/issues/599>`_.
 
-Currently in beta (v0.0.1) - seems to work but needs heavy testing.
+Current version (v0.2.0) is considered **beta** - seems to work but needs heavy testing.
 
 .. warning::
     This project is **NOT YET** properly tested. Use at your own risk.
@@ -30,6 +25,7 @@ Any help and suggestions will be appreciated.
     All the rest of the documentation - for now - is a mirror of Tastypie's
     docs and as such is not 100% relevant to Biscuit. Expect corrections
     anytime soon. I'll accept any help to straighten this up.
+
 
 Requirements
 ============
@@ -99,19 +95,32 @@ common reasons for biscuit.
 * You want/need XML serialization that is treated equally to JSON (and YAML is
   there too).
 * You want to read only a short Tutorial to get started.
+* Biscuit benefits from all API consumers tailored/optimized for Tastypie,
+  like `drest <http://drest.rtfd.org/>`_.
+
+
+Tastypie drop-in replacement
+----------------------------
+
+As the module has a different name, Biscuit itself is not a painless
+drop-in replacement for Tastypie as you'd need to refactor your code
+to get everything normally. But if you do want to benefit from *some*
+of Biscuit's goodness, you can checkout ``tastypie`` branch. I try
+to keep it up to date with current Tastypie development plus it
+includes all the patches that do not break compatibility.
 
 
 Differences with Tastypie
 -------------------------
 
 * You can register ``Model`` subclasses and appropriate ModelResource with sane defaults
-  (meaning ``resource_name = <Model>.__name__`` and ``queryset = <Model>.objects.all()``) is
+  (meaning ``resource_name = <Model>._meta.module_name`` and ``queryset = <Model>.objects.all()``) is
   tailored behind the scenes.
 * You can register ``Resource`` subclasses (compare new ``v1.register(MyResource)`` with old ``v1.register(MyResource())``)
 * You can put all those in a list and write a single register: ``v1.register([MyFirstResource, MyOtherResource]``).
   This list is not restricted and can contain both ``Resource`` and ``Model`` subclasses.
 * You can of course register ``Resource`` subclass' instances, just like you did in Tastypie (that's what "drop-in replacement" really means)
-* You can clean up your imports because ``Api`` instances are consumable. Compare::
+* No more cluttering urls.py - create ``Api`` instances in your app and then just import and include it in urls.py. Compare::
 
     # urls.py - Tastypie
     from tastypie.api import Api
@@ -137,7 +146,7 @@ Differences with Tastypie
     from myapp.api import myapi
     from otherapp.api import otherapi
 
-    v1 = Api(name='v1', consume=[myapi, otherapi])
+    v1 = Api(name='v1', include=[myapi, otherapi])
 
     urlpatterns = patterns('',
         # (...)
@@ -145,6 +154,41 @@ Differences with Tastypie
     )
 
   DRY and clean, isn't it? :)
+
+
+Versioning
+----------
+
+Starting from 0.2.0 I'll try to follow Semantic Version guidelines.
+
+Releases will be numbered with the following format:
+
+  ``<major>.<minor>.<patch>``
+
+And constructed with the following guidelines:
+
+* Breaking backward compatibility bumps the major (and resets the minor and patch)
+* New additions without breaking backward compatibility bumps the minor (and resets the patch)
+* Bug fixes and misc changes bumps the patch
+* Major version ``0`` means early development stage
+
+For more information on SemVer, please visit http://semver.org/.
+
+
+Planned features
+================
+
+* Decouple ``ModelResource`` from specific ``Model`` by extending logic of ``Api.register()``
+  if first argument is a ``Model`` subclass, second should be a ``ModelResource`` that will
+  wrap itself around the ``Model``. Optional argument ``name`` can be supplied to change
+  the default resource name.
+* Extend the logic of ``Api.register()`` so that it would accept an additional
+  ``Validator`` or ``Form`` subclass that will be used to validate pushed data. In ``Form``
+  case ``register()`` should construct a sane default ``Validator`` around it.
+  This combined with previous feature allows for nice and clean registering of resources
+  similar to ``django.contrib.admin`` approach.
+* Handle relationships by default - *somehow*
+
 
 Reference Material
 ==================
